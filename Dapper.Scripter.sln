@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLScriptHelper", "SQLScriptHelper\SQLScriptHelper.csproj", "{A1CC7A0A-7A18-4672-AC7A-0548558ECDD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{54F926E6-621C-4EE1-8067-D5A0FA444B92}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1CC7A0A-7A18-4672-AC7A-0548558ECDD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1CC7A0A-7A18-4672-AC7A-0548558ECDD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1CC7A0A-7A18-4672-AC7A-0548558ECDD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1CC7A0A-7A18-4672-AC7A-0548558ECDD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54F926E6-621C-4EE1-8067-D5A0FA444B92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54F926E6-621C-4EE1-8067-D5A0FA444B92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54F926E6-621C-4EE1-8067-D5A0FA444B92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54F926E6-621C-4EE1-8067-D5A0FA444B92}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
