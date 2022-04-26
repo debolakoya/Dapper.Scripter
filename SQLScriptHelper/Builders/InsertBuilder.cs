@@ -23,12 +23,12 @@ public static class InsertBuilder
     public static IEnumerable<string> AddField(this IList<string> fields, string field)
     {
         if (_type == null)
-            throw new InvalidOperationException($"FieldBuilder is not initialized. Please call OfType method first.");
+            throw new InvalidOperationException("FieldBuilder is not initialized. Please call OfType method first.");
 
         var property = _type.GetProperty(field);
 
         if (property == null)
-            throw new KeyNotFoundException($"{field} does not exist in {nameof(_type)}");
+            throw new KeyNotFoundException($"{field} does not exist in {_type.Name}");
 
         fields.Add(property.Name);
         return fields;
@@ -105,7 +105,7 @@ public static class InsertBuilder
         {
             scriptFields.Append($"[{key}]{spacer}");
             scriptParameters.Append($"@{key}{spacer}");
-            parameters.Add($"@{key}", GetValue(value));
+            parameters.Add($"@{key}", StringHelper.GetValue(value));
         }
 
         scriptFields = new StringBuilder(scriptFields.ToString().RemoveLastOccurrence(spacer)).Append(')');
@@ -116,10 +116,5 @@ public static class InsertBuilder
 
         return ($"{scriptFields}{scriptParameters}", parameters);
     }
-
-    private static object GetValue(object? value)
-    {
-        //TODO: add quote based on data type
-        return value ?? "null";
-    }
+     
 }
