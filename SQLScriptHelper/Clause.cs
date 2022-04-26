@@ -1,7 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
-namespace SQLScriptHelper;
+namespace ScriptBuilder;
 
-public enum KeyBuilderClause
+public enum Clause
 {
   Equals,
   NotEquals,

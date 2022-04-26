@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Reflection;
 using System.Text;
+using ScriptBuilder;
 
 namespace SQLScriptHelper;
 
@@ -72,7 +73,7 @@ public class ScriptBuilder<T> : IScriptBuilder<T> where T : class
     foreach (var (key, value) in _parameters)
     {
       scriptFields.Append($"{key}, ");
-      var mValue = ScriptBuilder<T>.GetValue(value);  
+      var mValue = GetValue(value);  
       scriptParameters.Append($"{mValue},");
       parameters.Add($"@{key}", mValue);
     }

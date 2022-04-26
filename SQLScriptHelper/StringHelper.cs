@@ -1,4 +1,4 @@
-﻿namespace SQLScriptHelper;
+﻿namespace ScriptBuilder;
 
 public static class StringHelper
 {
