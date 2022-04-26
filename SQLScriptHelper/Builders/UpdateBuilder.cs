@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace ScriptBuilder;
+namespace ScriptBuilder.Builders;
 
 public static class UpdateBuilder
 {

@@ -2,7 +2,7 @@
 
 using ConsoleApp1;
 using ScriptBuilder;
-using SQLScriptHelper;
+using ScriptBuilder.Builders;
 
 var user = new User
 {
@@ -12,8 +12,7 @@ var user = new User
     Name = "Bola",
     Number = 90,
     DateofBirth = new DateTime(2022, 8, 4)
-};
-
+}; 
 var (insertScript, insertParam) = InsertBuilder.OfType<User>(nameof(user.Id), "tbl_Users")
     .AddField(nameof(user.Amount))
     .Except(nameof(user.Id))

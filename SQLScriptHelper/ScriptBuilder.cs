@@ -1,11 +1,10 @@
 ﻿using System.Data;
 using System.Reflection;
 using System.Text;
-using ScriptBuilder;
 
-namespace SQLScriptHelper;
+namespace ScriptBuilder;
 
-public class ScriptBuilder<T> : IScriptBuilder<T> where T : class
+public class ScriptBuilder<T>  where T : class
 {
   private readonly string _tableName;
   private readonly string _identityFieldName;
