@@ -10,7 +10,7 @@ public static class UpdateBuilder
     private static List<string>? _fields;
     private static SortedDictionary<string, object?>? _parameters;
     private static string? _identityFieldName;
-    
+
     private static PropertyInfo GetProperty(string field)
     {
         var property = _type?.GetProperty(field, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
@@ -20,8 +20,8 @@ public static class UpdateBuilder
 
         return property;
     }
-    
-    public static (Dictionary<string, object> keyValues, StringBuilder clause) OfType<T>(string? tableName=null, string? identityFieldName=null) where T : class
+
+    public static (Dictionary<string, object> keyValues, StringBuilder clause) OfType<T>(string? tableName = null, string? identityFieldName = null) where T : class
     {
         _type = typeof(T);
         _fields = new List<string>();
@@ -30,14 +30,14 @@ public static class UpdateBuilder
         _tableName = string.IsNullOrEmpty(tableName) ? typeof(T).Name : tableName;
         return new ValueTuple<Dictionary<string, object>, StringBuilder>(new Dictionary<string, object>(), new StringBuilder());
     }
-    
+
     public static (Dictionary<string, object> keyValues, StringBuilder clause) AddField(this (Dictionary<string, object> keyValues, StringBuilder clause) keyValues, string field)
     {
         if (_type == null)
             throw new InvalidOperationException("UpdateBuilder is not initialized. Please call OfType method first.");
 
         var fieldName = GetProperty(field).Name;
-        
+
         _fields?.Add(fieldName);
         return keyValues;
     }
@@ -123,15 +123,14 @@ public static class UpdateBuilder
         throw new NotImplementedException();
     }
 
-    public static (string, Dictionary<string, object>) Build<T>(this (Dictionary<string, object> keyValues, StringBuilder clause) keybuilderResult, T data)
+    public static (string, Dictionary<string, object>) Build<TV>(this (Dictionary<string, object> keyValues, StringBuilder clause) keybuilderResult, TV data) where TV : class
     {
-         return keybuilderResult.UpdateScript(data);
-    }
-    
-    private static (string, Dictionary<string, object>) UpdateScript<T>(this (Dictionary<string, object> parameters, StringBuilder clause) whereClause,T data)
-    {
+        if (typeof(TV) != _type)
+            throw new InvalidOperationException($"Data type ({typeof(TV).Name}) does not match with the type of the builder ({_type?.Name}).");
+
         var scriptFields = new StringBuilder();
         var parameters = new Dictionary<string, object>();
+        _parameters ??= new SortedDictionary<string, object?>();
         scriptFields.Append($@"UPDATE {_tableName} SET");
 
         foreach (var (key, value) in _parameters)
@@ -142,11 +141,11 @@ public static class UpdateBuilder
 
         scriptFields = new StringBuilder(scriptFields.ToString().RemoveLastOccurrence(","));
 
-        if (whereClause.parameters?.Count > 0)
+        if (keybuilderResult.keyValues.Count > 0)
         {
-            scriptFields.Append($" WHERE {whereClause.clause}");
+            scriptFields.Append($" WHERE {keybuilderResult.clause}");
 
-            foreach (var (key, value) in whereClause.parameters)
+            foreach (var (key, value) in keybuilderResult.keyValues)
             {
                 parameters.Add($"@{key}", StringHelper.GetValue(value));
             }

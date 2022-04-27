@@ -62,8 +62,23 @@ public static class InsertBuilder
 
     public static (string, Dictionary<string, object>) Build<T>(this IEnumerable<string> fields, T data) where T : class
     {
+        if (typeof(T) != _type)
+            throw new InvalidOperationException($"Data type ({typeof(T).Name}) does not match with the type of the builder ({_type?.Name}).");
+
         fields.GenerateFieldValues(data);
-        return InsertScript();
+
+        var scriptFields = new StringBuilder();
+        _parameters ??= new SortedDictionary<string, object?>();
+        scriptFields.Append($@"INSERT INTO {_tableName}({string.Join(", ", _parameters.Keys.Select(key => $"[{key}]"))}) VALUES ({string.Join(", ", _parameters.Keys.Select(key => $"@{key}"))})");
+
+        var parameters = new Dictionary<string, object>();
+        foreach (var (key, value) in _parameters)
+            parameters.Add($"@{key}", StringHelper.GetValue(value));
+
+        if (!string.IsNullOrEmpty(_identityFieldName))
+            scriptFields.Append(" SELECT SCOPE_IDENTITY();");
+
+        return ($"{scriptFields}", parameters);
     }
 
     private static void GenerateFieldValues<T>(this IEnumerable<string> fields, T data)
@@ -90,31 +105,5 @@ public static class InsertBuilder
             throw new KeyNotFoundException($"{field} does not exist in {_type?.Name} Object");
         return property;
     }
-
-    private static (string, Dictionary<string, object>) InsertScript()
-    {
-        const string spacer = ", ";
-        var scriptFields = new StringBuilder();
-        var scriptParameters = new StringBuilder();
-        var parameters = new Dictionary<string, object>();
-        _parameters ??= new SortedDictionary<string, object?>();
-        scriptFields.Append($@"INSERT INTO {_tableName}(");
-        scriptParameters.Append(@" VALUES (");
-
-        foreach (var (key, value) in _parameters)
-        {
-            scriptFields.Append($"[{key}]{spacer}");
-            scriptParameters.Append($"@{key}{spacer}");
-            parameters.Add($"@{key}", StringHelper.GetValue(value));
-        }
-
-        scriptFields = new StringBuilder(scriptFields.ToString().RemoveLastOccurrence(spacer)).Append(')');
-        scriptParameters = new StringBuilder(scriptParameters.ToString().RemoveLastOccurrence(spacer)).Append(')');
-
-        if (!string.IsNullOrEmpty(_identityFieldName))
-            scriptParameters.Append(" SELECT SCOPE_IDENTITY();");
-
-        return ($"{scriptFields}{scriptParameters}", parameters);
-    }
-     
 }
+

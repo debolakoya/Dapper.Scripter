@@ -1,12 +1,12 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using ConsoleApp1;
-using ScriptBuilder;
 using ScriptBuilder.Builders;
+
 var school = new School
 {
     Id = 1,
-    Name="School 1"
+    Name=""
 };
 
 var user = new User
@@ -18,19 +18,9 @@ var user = new User
     Number = 90,
     ActionDateTime = new DateTime(1990, 1, 1, 12, 10, 30, DateTimeKind.Utc),
 }; 
-var (insertScript, insertParam) = InsertBuilder.OfType<User>( "tbl_Users")
-    .AddField("Id")
-    .AddFields()
-    .Except(nameof(user.Id))
-    .Build(user);
+//GenerateInsert(user);
 
-Console.WriteLine(insertScript);
-foreach (var val in insertParam)
-{
-    Console.WriteLine($"{val.Key}:{val.Value}");
-}
 
-Console.WriteLine("===========================");
 var (updateScript, updateParam) = UpdateBuilder.OfType<User>(nameof(User))
     .AddFields()
     .Except(nameof(user.Id))
@@ -45,4 +35,19 @@ Console.WriteLine(updateScript);
 foreach (var val in updateParam)
 {
     Console.WriteLine($"{val.Key}:{val.Value}");
+}
+
+void GenerateInsert(User user1)
+{
+    var (insertScript, insertParam) = InsertBuilder.OfType<User>("tbl_Users", "Id")
+        .AddField("Id")
+        .AddFields()
+        .Except(nameof(user1.Id))
+        .Build(user1);
+
+    Console.WriteLine(insertScript);
+    foreach (var val in insertParam)
+    {
+        Console.WriteLine($"{val.Key}:{val.Value}");
+    }
 }
