@@ -9,12 +9,14 @@ public static class Builder
   private static Type? _type;
   private static string? _tableName;
   private static SortedDictionary<string, object?>? _parameters;
+  private static Dictionary<string, object?>? _whereClauses;
   private static string? _identityFieldName;
 
   public static (IList<string>, Type) OfType<T>(string? tableName = null, string? identityFieldName = null) where T : class
   {
     _type = typeof(T);
     _identityFieldName = identityFieldName;
+    _whereClauses= new Dictionary<string, object?>();
     _parameters = new SortedDictionary<string, object?>();
     _tableName = string.IsNullOrEmpty(tableName) ? typeof(T).Name : tableName;
     return new(new List<string>(), typeof(T));
@@ -107,19 +109,22 @@ public static class Builder
     return property;
   }
 
-  
-  //public static (IEnumerable<string> keyValues) Where(this (IList<string> keyValues) keybuilderResult, string field, Clause clause, object value)
-  //{
-  //  if (_type == null)
-  //    throw new InvalidOperationException("UpdateBuilder is not initialized. Please call OfType method first.");
+  public static (IEnumerable<string>, Type) Where(this (IEnumerable<string> keyValues, Type type) builder, string field, Clause clause, object value)
+  {
+    if (_type == null)
+      throw new InvalidOperationException("Builder is not initialized. Please call OfType method first.");
 
-  //  GetProperty(field);
+     var property = builder.type.GetProperty(field);
 
-  //  if (!keybuilderResult.keyValues.Contains(field, StringComparer.OrdinalIgnoreCase))
-  //    keybuilderResult.keyValues.Add(field);
+      if (property == null)
+        throw new KeyNotFoundException($"{field} does not exist in {nameof(builder.type)}");
+    
+      _whereClauses??= new Dictionary<string, object?>();
+    
+    _whereClauses.Add (field , value );
 
-  //  return keybuilderResult;
-  //}
+    return builder ;
+  }
 
   //public static (IList<string> keyValues) WhereAnd(this (IList<string> keyValues) keybuilderResult, string field, Clause clause, object value)
   //{

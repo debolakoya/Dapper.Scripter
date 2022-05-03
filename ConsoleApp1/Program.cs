@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using ConsoleApp1;
+using ScriptBuilder;
 using ScriptBuilder.Builders;
 
 var school = new School
@@ -42,7 +43,7 @@ void GenerateUpdate(User user)
   var (updateScript, updateParam) = Builder.OfType<User>("mq", "Id")
     .AddField("Name")
      .Except(nameof(user.DateofBirth))
-    //.Where(nameof(user.Id), Clause.Equals, user.Id)
+    .Where(nameof(user.Id), Clause.Equals, user.Id)
     //.WhereAnd(nameof(user.Name), Clause.Equals, user.Name)
     //.WhereBetween(nameof(user.Id), 77, 100)
     //.WhereOr(nameof(user.Id), Clause.Equals, user.Name)
