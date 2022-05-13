@@ -2,13 +2,6 @@
 
 using ConsoleApp1;
 using ScriptBuilder;
-using ScriptBuilder.Builders;
-
-var school = new School
-{
-  Id = 1,
-  Name = ""
-};
 
 var user = new User
 {
@@ -38,16 +31,16 @@ void GenerateInsert(User user1)
   }
 }
 
-void GenerateUpdate(User user)
+void GenerateUpdate(User user2)
 {
   var (updateScript, updateParam) = Builder.OfType<User>("mq", "Id")
     .AddField("Name")
-     .Except(nameof(user.DateofBirth))
-    .Where(nameof(user.Id), Clause.Equals, user.Id)
+     .Except(nameof(user2.DateofBirth))
+    .Where(nameof(user2.Id), Clause.Equals, user2.Id)
     //.WhereAnd(nameof(user.Name), Clause.Equals, user.Name)
     //.WhereBetween(nameof(user.Id), 77, 100)
     //.WhereOr(nameof(user.Id), Clause.Equals, user.Name)
-    .Update(user);
+    .Update(user2);
 
 
   Console.WriteLine(updateScript);

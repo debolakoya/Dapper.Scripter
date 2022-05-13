@@ -1,5 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-namespace ScriptBuilder;
+﻿namespace ScriptBuilder;
 
 public enum Clause
 {
